@@ -1,50 +1,71 @@
-# Diagnostic Translator (MCP)
+# Diagnostic Translator
 
-A Go-based MCP server that runs a command and translates terminal output into structured JSON diagnostics.
+A lightweight [MCP](https://modelcontextprotocol.io) server that runs commands and converts compiler/linter/runtime errors into structured JSON. Makes error output machine-readable so AI agents can work with it programmatically.
 
-## Run
+## Supported Languages
+
+| Language | Toolchains |
+|----------|-----------|
+| Python | mypy, pytest, flake8, pylint, runtime tracebacks |
+| Go | go build, go vet, golangci-lint |
+| TypeScript | tsc |
+| JavaScript | eslint, prettier |
+| Rust | rustc, cargo |
+| C / C++ | gcc, g++, clang, clang++ |
+| Java | javac, maven, gradle |
+| Ruby | ruby, rake, rails |
+
+## Quick Start
 
 ```bash
+# Build
+go build -o diagnostic-translator .
+
+# Or run directly
 go run .
 ```
 
-## Build
+## MCP Client Setup
 
-```bash
-go build -o diagnostic-translator .
-```
+The server communicates over stdio. Add it to your MCP client config:
 
-## MCP client setup (stdio)
-
-Configure your MCP client to launch the server over stdio:
-
+**Claude Desktop** (`claude_desktop_config.json`):
 ```json
 {
-  "command": "go",
-  "args": ["run", "."]
+  "mcpServers": {
+    "diagnostic-translator": {
+      "command": "/path/to/diagnostic-translator",
+      "args": []
+    }
+  }
 }
 ```
 
-## Tool: `diagnose_command`
-
-**Arguments**
-- `command` (string, required): Executable to run (for example `python`)
-- `args` (string[], optional): Arguments to pass to the command
-- `cwd` (string, optional): Working directory
-- `timeout_ms` (integer, optional): Timeout in milliseconds (default 120000)
-- `language_hint` (string, optional): Override detected language
-- `toolchain_hint` (string, optional): Override detected toolchain
-
-Arguments are passed without shell evaluation. Example:
-
+**VS Code / Cline / Continue**:
 ```json
 {
-  "command": "python",
-  "args": ["manage.py", "runserver", "-json"]
+  "command": "/path/to/diagnostic-translator",
+  "args": []
 }
 ```
 
-**Example request**
+## Usage
+
+The server exposes one tool called **`diagnose_command`**:
+
+### Arguments
+
+| Argument | Type | Required | Description |
+|----------|------|----------|-------------|
+| `command` | string | yes | Executable to run (e.g. `python`, `tsc`, `gcc`) |
+| `args` | string[] | no | Arguments to pass |
+| `cwd` | string | no | Working directory |
+| `timeout_ms` | integer | no | Timeout in ms (default 120000) |
+| `language_hint` | string | no | Override language detection |
+| `toolchain_hint` | string | no | Override toolchain detection |
+
+### Example
+
 ```json
 {
   "command": "python",
@@ -53,7 +74,8 @@ Arguments are passed without shell evaluation. Example:
 }
 ```
 
-**Example response**
+### Response
+
 ```json
 {
   "ok": false,
@@ -67,24 +89,48 @@ Arguments are passed without shell evaluation. Example:
   },
   "diagnostics": [
     {
-      "code": "DT_PY_TYPE",
+      "code": "DT_PY_OPERATOR",
       "severity": "error",
       "message": "Unsupported operand types for +: \"int\" and \"str\"",
       "location": {
         "file": "src/app.py",
         "line": 42,
         "column": 18
-      },
-      "context": {
-        "source_line": "total_count = items_count + baseline_string"
       }
     }
-  ]
+  ],
+  "raw_output": "src/app.py:42:18: error: Unsupported operand types...",
+  "stdout": "",
+  "stderr": "src/app.py:42:18: error: Unsupported operand types..."
 }
 ```
 
-**Response fields**
-- `ok`: whether the command succeeded
-- `runtime_metadata`: execution details (language, toolchain, timing, exit code, command)
-- `diagnostics`: structured issues derived from stderr/stdout
-- `raw_output`, `stdout`, `stderr`: captured output (truncated if large)
+### Response Fields
+
+- `ok` — whether the command exited successfully
+- `runtime_metadata` — language, toolchain, execution time, exit code, command
+- `diagnostics[]` — parsed issues from stderr/stdout
+  - `code` — error identifier (e.g. `DT_TS_TS2322`, `DT_RS_E0308`, `DT_GO_BUILD`)
+  - `severity` — `error`, `warning`, or `note`
+  - `message` — human-readable error text
+  - `location` — file path, line number, column (when available)
+  - `context` — source line of the error (Python tracebacks only)
+- `raw_output`, `stdout`, `stderr` — captured output (truncated if > 16KB)
+
+## Development
+
+```bash
+# Run tests
+go test ./...
+
+# Build
+go build -o diagnostic-translator .
+```
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for details on how to add parsers for new languages, report bugs, or submit changes.
+
+## License
+
+[MIT](LICENSE)
