@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZeroTest — Structured diagnostics for every compiler error</title>
+  <meta name="description" content="ZeroTest turns messy compiler output into clean JSON. Use it from the terminal or as an MCP server for AI agents.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧪</text></svg>">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: #0d1117;
+      color: #e6edf3;
+      line-height: 1.6;
+    }
+
+    a { color: #58a6ff; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .container { max-width: 920px; margin: 0 auto; padding: 0 24px; }
+
+    /* Header */
+    header {
+      padding: 24px 0;
+      border-bottom: 1px solid #21262d;
+    }
+    header .container {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    header .logo {
+      font-size: 18px; font-weight: 700;
+      display: flex; align-items: center; gap: 8px;
+    }
+    header nav a {
+      margin-left: 24px; font-size: 14px; color: #8b949e;
+    }
+    header nav a:hover { color: #58a6ff; }
+
+    .github-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 16px;
+      background: #21262d;
+      border-radius: 6px;
+      font-size: 14px;
+      color: #e6edf3;
+      border: 1px solid #30363d;
+    }
+    .github-link:hover { background: #30363d; text-decoration: none; }
+
+    /* Hero */
+    .hero {
+      padding: 80px 0 60px;
+      text-align: center;
+    }
+    .hero h1 { font-size: 48px; font-weight: 800; margin-bottom: 16px; letter-spacing: -1px; }
+    .hero h1 span { color: #58a6ff; }
+    .hero p {
+      font-size: 20px; color: #8b949e; max-width: 640px; margin: 0 auto 32px;
+    }
+    .hero-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 24px; border-radius: 8px;
+      font-size: 16px; font-weight: 600;
+      cursor: pointer; border: none;
+    }
+    .btn-primary { background: #238636; color: #fff; }
+    .btn-primary:hover { background: #2ea043; }
+    .btn-secondary { background: #21262d; color: #e6edf3; border: 1px solid #30363d; }
+    .btn-secondary:hover { background: #30363d; }
+
+    /* Section */
+    .section { padding: 64px 0; }
+    .section-title { font-size: 28px; font-weight: 700; margin-bottom: 24px; }
+    .section-subtitle { color: #8b949e; margin-bottom: 40px; }
+
+    /* What is it */
+    .features { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .feature {
+      background: #161b22; border: 1px solid #21262d; border-radius: 8px;
+      padding: 24px;
+    }
+    .feature h3 { font-size: 16px; margin-bottom: 8px; }
+    .feature p { font-size: 14px; color: #8b949e; }
+
+    /* Languages */
+    .lang-table {
+      width: 100%; border-collapse: collapse;
+      background: #161b22; border: 1px solid #21262d; border-radius: 8px; overflow: hidden;
+    }
+    .lang-table th, .lang-table td {
+      text-align: left; padding: 12px 20px;
+      border-bottom: 1px solid #21262d;
+    }
+    .lang-table th { background: #161b22; color: #8b949e; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .lang-table td { font-size: 15px; }
+    .lang-table tr:last-child td { border-bottom: none; }
+    .lang-badge {
+      display: inline-block; padding: 3px 10px; border-radius: 20px;
+      font-size: 12px; font-weight: 600;
+    }
+    .badge-py { background: #2b5b84; color: #c7d5e0; }
+    .badge-go { background: #005c99; color: #c7d5e0; }
+    .badge-ts { background: #2b5b84; color: #c7d5e0; }
+    .badge-js { background: #5a5a00; color: #d4d4a0; }
+    .badge-rs { background: #6e2130; color: #d4c5c0; }
+    .badge-c  { background: #2b4a5a; color: #c7d5e0; }
+    .badge-jv { background: #5a3a00; color: #d4c5a0; }
+    .badge-rb { background: #6e2130; color: #d4c5c0; }
+
+    /* Download */
+    .download-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+    }
+    .download-card {
+      display: flex; align-items: center; justify-content: space-between;
+      background: #161b22; border: 1px solid #21262d; border-radius: 8px;
+      padding: 16px 20px;
+    }
+    .download-card .os { font-weight: 600; font-size: 15px; }
+    .download-card .arch { color: #8b949e; font-size: 13px; }
+    .dl-link {
+      padding: 6px 14px; border-radius: 6px;
+      background: #238636; color: #fff;
+      font-size: 13px; font-weight: 600;
+    }
+    .dl-link:hover { background: #2ea043; text-decoration: none; }
+
+    /* Code */
+    pre {
+      background: #161b22; border: 1px solid #21262d; border-radius: 8px;
+      padding: 20px; overflow-x: auto;
+      font-family: "SF Mono", "Monaco", "Inconsolata", monospace;
+      font-size: 14px; line-height: 1.5;
+    }
+    code { font-family: "SF Mono", "Monaco", "Inconsolata", monospace; }
+    .cmd { color: #58a6ff; }
+    .comment { color: #8b949e; }
+    .string { color: #a5d6ff; }
+
+    /* Usage tabs */
+    .tabs { display: flex; gap: 0; margin-bottom: 0; }
+    .tab {
+      padding: 10px 20px; cursor: pointer;
+      background: #161b22; border: 1px solid #21262d; border-bottom: none;
+      border-radius: 8px 8px 0 0; font-size: 14px; font-weight: 600;
+      color: #8b949e;
+    }
+    .tab.active { background: #161b22; color: #e6edf3; border-color: #30363d; position: relative; }
+    .tab.active::after {
+      content: ''; position: absolute; bottom: -1px; left: 0; right: 0;
+      height: 1px; background: #161b22;
+    }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .tab-panel { background: #161b22; border: 1px solid #30363d; border-radius: 0 8px 8px 8px; padding: 24px; }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid #21262d; padding: 32px 0;
+      text-align: center; color: #8b949e; font-size: 14px;
+    }
+    footer a { color: #8b949e; }
+    footer a:hover { color: #58a6ff; }
+
+    /* GitHub Pages note */
+    .source-note {
+      margin-top: 12px; font-size: 13px; color: #484f58;
+    }
+
+    @media (max-width: 640px) {
+      .hero h1 { font-size: 32px; }
+      .features { grid-template-columns: 1fr; }
+      .download-grid { grid-template-columns: 1fr; }
+      header nav a { margin-left: 12px; font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="logo">🧪 ZeroTest</div>
+    <nav>
+      <a href="#features">Features</a>
+      <a href="#languages">Languages</a>
+      <a href="#download">Download</a>
+      <a href="#usage">Usage</a>
+      <a href="https://github.com/scopophobic/ZeroTest" target="_blank">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <h1>Turn compiler noise into <span>clean JSON</span></h1>
+    <p>ZeroTest runs any command and converts its errors into structured diagnostics — file paths, line numbers, severity, error codes. Ready for your terminal or your AI agent.</p>
+    <div class="hero-buttons">
+      <a href="#download" class="btn btn-primary">⬇ Download</a>
+      <a href="https://github.com/scopophobic/ZeroTest" target="_blank" class="btn btn-secondary">View on GitHub →</a>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="features">
+  <div class="container">
+    <h2 class="section-title">What it does</h2>
+    <div class="features">
+      <div class="feature">
+        <h3>🧹 Parse anything</h3>
+        <p>mypy, tsc, gcc, rustc, javac, eslint, go build, Ruby — regex-based parsers for 8 languages and growing.</p>
+      </div>
+      <div class="feature">
+        <h3>📋 Structured output</h3>
+        <p>Every error becomes a JSON object with file, line, column, severity, error code, and message.</p>
+      </div>
+      <div class="feature">
+        <h3>🖥 CLI mode</h3>
+        <p>Run from any terminal: <code>zerotest python -m mypy src/app.py</code>. JSON goes to stdout.</p>
+      </div>
+      <div class="feature">
+        <h3>🤖 MCP server</h3>
+        <p>Works as an MCP tool for Claude, Cline, Continue, and any MCP-compatible agent.</p>
+      </div>
+      <div class="feature">
+        <h3>🔍 Auto-detection</h3>
+        <p>Detects language and toolchain from the command name and output. Override with hints if needed.</p>
+      </div>
+      <div class="feature">
+        <h3>⚡ Single binary</h3>
+        <p>Written in Go. Zero runtime dependencies. Drop-in binary for Mac, Linux, or Windows.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="languages">
+  <div class="container">
+    <h2 class="section-title">Supported languages</h2>
+    <table class="lang-table">
+      <thead>
+        <tr><th>Language</th><th>Toolchains</th><th>Diagnostics</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="lang-badge badge-py">Python</span></td>
+          <td>mypy, pytest, flake8, pylint, runtime</td>
+          <td>mypy format, tracebacks with source lines</td>
+        </tr>
+        <tr>
+          <td><span class="lang-badge badge-go">Go</span></td>
+          <td>go build, go vet, golangci-lint</td>
+          <td><code>file:line:col: message</code></td>
+        </tr>
+        <tr>
+          <td><span class="lang-badge badge-ts">TypeScript</span></td>
+          <td>tsc</td>
+          <td><code>TSXXXX</code> codes with paren or colon format</td>
+        </tr>
+        <tr>
+          <td><span class="lang-badge badge-js">JavaScript</span></td>
+          <td>eslint, prettier</td>
+          <td>multi-file <code>line:col severity rule-id</code> format</td>
+        </tr>
+        <tr>
+          <td><span class="lang-badge badge-rs">Rust</span></td>
+          <td>rustc, cargo</td>
+          <td><code>error[EXXXX]</code> with <code>--></code> location, panics</td>
+        </tr>
+        <tr>
+          <td><span class="lang-badge badge-c">C / C++</span></td>
+          <td>gcc, g++, clang, clang++</td>
+          <td><code>file:line:col: error/warning/note:</code></td>
+        </tr>
+        <tr>
+          <td><span class="lang-badge badge-jv">Java</span></td>
+          <td>javac, maven, gradle</td>
+          <td><code>file:line:col: error/warning:</code></td>
+        </tr>
+        <tr>
+          <td><span class="lang-badge badge-rb">Ruby</span></td>
+          <td>ruby, rake, rails</td>
+          <td>syntax errors, method errors, exception types</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="margin-top:16px;color:#8b949e;font-size:14px;">Missing a language? <a href="https://github.com/scopophobic/ZeroTest/blob/main/CONTRIBUTING.md">Contributions welcome</a>.</p>
+  </div>
+</section>
+
+<section class="section" id="download">
+  <div class="container">
+    <h2 class="section-title">Download</h2>
+    <p class="section-subtitle">v0.1.1 — grab the binary for your platform.</p>
+    <div class="download-grid">
+      <div class="download-card">
+        <div><div class="os">🍏 macOS (Apple Silicon)</div><div class="arch">arm64</div></div>
+        <a href="https://github.com/scopophobic/ZeroTest/releases/download/v0.1.1/zerotest-darwin-arm64" class="dl-link">Download</a>
+      </div>
+      <div class="download-card">
+        <div><div class="os">🍏 macOS (Intel)</div><div class="arch">amd64</div></div>
+        <a href="https://github.com/scopophobic/ZeroTest/releases/download/v0.1.1/zerotest-darwin-amd64" class="dl-link">Download</a>
+      </div>
+      <div class="download-card">
+        <div><div class="os">🐧 Linux</div><div class="arch">amd64</div></div>
+        <a href="https://github.com/scopophobic/ZeroTest/releases/download/v0.1.1/zerotest-linux-amd64" class="dl-link">Download</a>
+      </div>
+      <div class="download-card">
+        <div><div class="os">🪟 Windows</div><div class="arch">amd64</div></div>
+        <a href="https://github.com/scopophobic/ZeroTest/releases/download/v0.1.1/zerotest-windows-amd64.exe" class="dl-link">Download</a>
+      </div>
+    </div>
+    <div class="source-note">
+      Or install from source: <code>go install github.com/scopophobic/ZeroTest@latest</code>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="usage">
+  <div class="container">
+    <h2 class="section-title">How to use</h2>
+
+    <div style="margin-bottom: 24px;">
+      <div class="tabs">
+        <div class="tab active" onclick="switchTab('cli')">💻 CLI mode</div>
+        <div class="tab" onclick="switchTab('mcp')">🤖 MCP server</div>
+      </div>
+      <div id="cli-panel" class="tab-panel tab-content active">
+        <p style="margin-bottom:16px;color:#8b949e;">Run any command and get JSON diagnostics straight to your terminal.</p>
+        <pre># Python / mypy
+<span class="cmd">zerotest</span> python -m mypy src/app.py
+
+# Go build
+<span class="cmd">zerotest</span> go build ./...
+
+# TypeScript
+<span class="cmd">zerotest</span> tsc --noEmit
+
+# C
+<span class="cmd">zerotest</span> gcc main.c -o main
+
+# Rust
+<span class="cmd">zerotest</span> cargo build
+
+# Flags
+<span class="cmd">zerotest</span> -h     <span class="comment"># help</span>
+<span class="cmd">zerotest</span> -v     <span class="comment"># version</span></pre>
+        <p style="margin-top:12px;color:#8b949e;font-size:14px;">JSON is printed to stdout. Exit code matches the wrapped command.</p>
+      </div>
+      <div id="mcp-panel" class="tab-panel tab-content">
+        <p style="margin-bottom:16px;color:#8b949e;">Run as an MCP server for your AI agent. Just launch with no arguments:</p>
+        <pre><span class="cmd">zerotest</span></pre>
+        <p style="margin:16px 0;color:#8b949e;">Then add to your MCP client config:</p>
+        <pre><span class="comment"># Claude Desktop (claude_desktop_config.json)</span>
+{
+  "mcpServers": {
+    "zerotest": {
+      "command": "/path/to/zerotest",
+      "args": []
+    }
+  }
+}</pre>
+      </div>
+    </div>
+
+    <h3 style="font-size:20px;margin-bottom:16px;">Example output</h3>
+    <pre>{
+  <span class="string">"ok"</span>: false,
+  <span class="string">"runtime_metadata"</span>: {
+    <span class="string">"language"</span>: <span class="string">"python"</span>,
+    <span class="string">"toolchain"</span>: <span class="string">"mypy"</span>,
+    <span class="string">"execution_time_ms"</span>: 14,
+    <span class="string">"exit_code"</span>: 1,
+    <span class="string">"command"</span>: <span class="string">"python"</span>,
+    <span class="string">"args"</span>: [<span class="string">"-m"</span>, <span class="string">"mypy"</span>, <span class="string">"src/app.py"</span>]
+  },
+  <span class="string">"diagnostics"</span>: [
+    {
+      <span class="string">"code"</span>: <span class="string">"DT_PY_OPERATOR"</span>,
+      <span class="string">"severity"</span>: <span class="string">"error"</span>,
+      <span class="string">"message"</span>: <span class="string">"Unsupported operand types"</span>,
+      <span class="string">"location"</span>: {
+        <span class="string">"file"</span>: <span class="string">"src/app.py"</span>,
+        <span class="string">"line"</span>: 42,
+        <span class="string">"column"</span>: 18
+      }
+    }
+  ]
+}</pre>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>
+      <a href="https://github.com/scopophobic/ZeroTest">GitHub</a> ·
+      <a href="https://github.com/scopophobic/ZeroTest/blob/main/CONTRIBUTING.md">Contributing</a> ·
+      <a href="https://github.com/scopophobic/ZeroTest/blob/main/LICENSE">MIT License</a>
+    </p>
+    <p style="margin-top:8px;">Built with Go + <a href="https://github.com/mark3labs/mcp-go" target="_blank">mcp-go</a></p>
+  </div>
+</footer>
+
+<script>
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelector(`.tab[onclick*="${name}"]`).classList.add('active');
+  document.getElementById(name + '-panel').classList.add('active');
+}
+</script>
+
+</body>
+</html>
