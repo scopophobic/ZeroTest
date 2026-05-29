@@ -3,8 +3,10 @@ package main
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
+	"os"
 	"os/exec"
 	"strings"
 	"time"
@@ -18,10 +20,61 @@ const (
 	maxOutputBytes   = 16000
 )
 
+const version = "0.1.0"
+
 func main() {
+	if len(os.Args) > 1 {
+		cliMode()
+		return
+	}
+	mcpMode()
+}
+
+func cliMode() {
+	cmd := os.Args[1]
+	args := os.Args[2:]
+
+	if cmd == "-v" || cmd == "--version" {
+		fmt.Printf("ZeroTest v%s\n", version)
+		return
+	}
+	if cmd == "-h" || cmd == "--help" {
+		printCLIHelp()
+		return
+	}
+
+	report := runAndDiagnose(context.Background(), cmd, args, "", defaultTimeoutMs, "", "")
+
+	enc := json.NewEncoder(os.Stdout)
+	enc.SetIndent("", "  ")
+	if err := enc.Encode(report); err != nil {
+		fmt.Fprintf(os.Stderr, "error encoding output: %v\n", err)
+		os.Exit(1)
+	}
+	if !report.Ok {
+		os.Exit(report.RuntimeMetadata.ExitCode)
+	}
+}
+
+func printCLIHelp() {
+	fmt.Println(`ZeroTest v` + version + ` — diagnostic JSON for any command output
+
+Usage:
+  zerotest <command> [args...]    Run a command and print JSON diagnostics
+  zerotest -h, --help             Show this help
+  zerotest -v, --version          Show version
+
+Examples:
+  zerotest python -m mypy src/app.py
+  zerotest go build ./...
+  zerotest tsc --noEmit
+  zerotest gcc main.c -o main`)
+}
+
+func mcpMode() {
 	s := server.NewMCPServer(
 		"ZeroTest",
-		"0.1.0",
+		version,
 		server.WithToolCapabilities(false),
 		server.WithRecovery(),
 	)

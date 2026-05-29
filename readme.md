@@ -32,12 +32,30 @@ chmod +x zerotest-darwin-arm64
 mv zerotest-darwin-arm64 /usr/local/bin/zerotest
 ```
 
-## Quick Start (from source)
+## Quick Start
+
+### CLI mode (standalone)
+
+Run any command and get structured JSON diagnostics:
 
 ```bash
-go build -o zerotest .
-./zerotest
+zerotest python -m mypy src/app.py
+zerotest go build ./...
+zerotest tsc --noEmit
+zerotest gcc main.c -o main
 ```
+
+The JSON is printed to stdout. Exit code matches the wrapped command.
+
+### MCP server mode
+
+For use with agents (Claude, Cline, Continue, etc.):
+
+```bash
+zerotest
+```
+
+Then configure as an MCP tool in your client.
 
 ## MCP Client Setup
 
