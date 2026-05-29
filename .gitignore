@@ -1,1 +1,6 @@
 .agent/
+diagnostic-translator
+diagnostic-translator-bin
+*.exe
+*.test
+*.out
