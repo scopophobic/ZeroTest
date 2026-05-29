@@ -1,4 +1,4 @@
-# Diagnostic Translator
+# ZeroTest
 
 A lightweight [MCP](https://modelcontextprotocol.io) server that runs commands and converts compiler/linter/runtime errors into structured JSON. Makes error output machine-readable so AI agents can work with it programmatically.
 
@@ -19,7 +19,7 @@ A lightweight [MCP](https://modelcontextprotocol.io) server that runs commands a
 
 ```bash
 # Build
-go build -o diagnostic-translator .
+go build -o zerotest .
 
 # Or run directly
 go run .
@@ -33,8 +33,8 @@ The server communicates over stdio. Add it to your MCP client config:
 ```json
 {
   "mcpServers": {
-    "diagnostic-translator": {
-      "command": "/path/to/diagnostic-translator",
+    "zerotest": {
+      "command": "/path/to/zerotest",
       "args": []
     }
   }
@@ -44,7 +44,7 @@ The server communicates over stdio. Add it to your MCP client config:
 **VS Code / Cline / Continue**:
 ```json
 {
-  "command": "/path/to/diagnostic-translator",
+  "command": "/path/to/zerotest",
   "args": []
 }
 ```
@@ -124,7 +124,7 @@ The server exposes one tool called **`diagnose_command`**:
 go test ./...
 
 # Build
-go build -o diagnostic-translator .
+go build -o zerotest .
 ```
 
 ## Contributing

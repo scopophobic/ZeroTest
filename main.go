@@ -20,8 +20,8 @@ const (
 
 func main() {
 	s := server.NewMCPServer(
-		"Diagnostic Translator",
-		"0.2.0",
+		"ZeroTest",
+		"0.1.0",
 		server.WithToolCapabilities(false),
 		server.WithRecovery(),
 	)

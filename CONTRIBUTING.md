@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for considering contributing to Diagnostic Translator.
+Thanks for considering contributing to ZeroTest.
 
 ## Project Structure
 
