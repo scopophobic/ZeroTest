@@ -17,14 +17,14 @@ A lightweight [MCP](https://modelcontextprotocol.io) server that runs commands a
 
 ## Download
 
-Grab the pre-built binary for your platform from the [latest release](https://github.com/scopophobic/ZeroTest/releases/tag/v0.1.0):
+Grab the pre-built binary for your platform from the [latest release](https://github.com/scopophobic/ZeroTest/releases/tag/v0.1.1):
 
 | Platform | Download |
 |----------|----------|
-| Apple Silicon Mac (M1–M4) | [`zerotest-darwin-arm64`](https://github.com/scopophobic/ZeroTest/releases/download/v0.1.0/zerotest-darwin-arm64) |
-| Intel Mac | [`zerotest-darwin-amd64`](https://github.com/scopophobic/ZeroTest/releases/download/v0.1.0/zerotest-darwin-amd64) |
-| Linux | [`zerotest-linux-amd64`](https://github.com/scopophobic/ZeroTest/releases/download/v0.1.0/zerotest-linux-amd64) |
-| Windows | [`zerotest-windows-amd64.exe`](https://github.com/scopophobic/ZeroTest/releases/download/v0.1.0/zerotest-windows-amd64.exe) |
+| Apple Silicon Mac (M1–M4) | [`zerotest-darwin-arm64`](https://github.com/scopophobic/ZeroTest/releases/download/v0.1.1/zerotest-darwin-arm64) |
+| Intel Mac | [`zerotest-darwin-amd64`](https://github.com/scopophobic/ZeroTest/releases/download/v0.1.1/zerotest-darwin-amd64) |
+| Linux | [`zerotest-linux-amd64`](https://github.com/scopophobic/ZeroTest/releases/download/v0.1.1/zerotest-linux-amd64) |
+| Windows | [`zerotest-windows-amd64.exe`](https://github.com/scopophobic/ZeroTest/releases/download/v0.1.1/zerotest-windows-amd64.exe) |
 
 ```bash
 # After downloading, make it executable

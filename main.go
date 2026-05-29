@@ -20,7 +20,7 @@ const (
 	maxOutputBytes   = 16000
 )
 
-const version = "0.1.0"
+const version = "0.1.1"
 
 func main() {
 	if len(os.Args) > 1 {
