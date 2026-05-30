@@ -15,22 +15,24 @@ A lightweight [MCP](https://modelcontextprotocol.io) server that runs commands a
 | Java | javac, maven, gradle |
 | Ruby | ruby, rake, rails |
 
-## Download
+## Install
 
-Grab the pre-built binary for your platform from the [latest release](https://github.com/scopophobic/ZeroTest/releases/tag/v0.1.1):
-
-| Platform | Download |
-|----------|----------|
-| Apple Silicon Mac (M1–M4) | [`zerotest-darwin-arm64`](https://github.com/scopophobic/ZeroTest/releases/download/v0.1.1/zerotest-darwin-arm64) |
-| Intel Mac | [`zerotest-darwin-amd64`](https://github.com/scopophobic/ZeroTest/releases/download/v0.1.1/zerotest-darwin-amd64) |
-| Linux | [`zerotest-linux-amd64`](https://github.com/scopophobic/ZeroTest/releases/download/v0.1.1/zerotest-linux-amd64) |
-| Windows | [`zerotest-windows-amd64.exe`](https://github.com/scopophobic/ZeroTest/releases/download/v0.1.1/zerotest-windows-amd64.exe) |
-
+**Go** (all platforms):
 ```bash
-# After downloading, make it executable
-chmod +x zerotest-darwin-arm64
-mv zerotest-darwin-arm64 /usr/local/bin/zerotest
+go install github.com/scopophobic/ZeroTest@latest
 ```
+
+**macOS / Linux** — curl one-liner:
+```bash
+curl -sL https://github.com/scopophobic/ZeroTest/releases/latest/download/zerotest-$(uname -s | tr '[:upper:]' '[:lower:]')-$(uname -m | sed 's/x86_64/amd64/; s/aarch64/arm64/') -o /usr/local/bin/zerotest && chmod +x /usr/local/bin/zerotest
+```
+
+**Windows** (PowerShell):
+```powershell
+curl -sL https://github.com/scopophobic/ZeroTest/releases/latest/download/zerotest-windows-amd64.exe -o zerotest.exe
+```
+
+> Pre-built binaries are also available on the [releases page](https://github.com/scopophobic/ZeroTest/releases).
 
 ## Quick Start
 
