@@ -202,7 +202,7 @@
   <nav>
     <a href="#features">Features</a>
     <a href="#lang">Languages</a>
-    <a href="#dl">Download</a>
+    <a href="#dl">Install</a>
     <a href="#use">Usage</a>
     <a href="https://github.com/scopophobic/ZeroTest" target="_blank">Source</a>
   </nav>
@@ -213,7 +213,7 @@
     <h1>Compiler noise<br>→ structured JSON.</h1>
     <p>ZeroTest runs any command and translates errors into clean, machine-readable diagnostics. File paths, line numbers, severity, error codes — all in one JSON payload.</p>
     <div class="cta">
-      <a href="#dl" class="btn">Download v0.1.1</a>
+      <a href="#dl" class="btn">Install v0.1.1</a>
       <a href="#use" class="btn btn-outline">How to use</a>
     </div>
   </section>
@@ -293,38 +293,53 @@
   </section>
 
   <section class="section container" id="dl">
-    <h2 class="section-title">/ download</h2>
-    <div class="dl-grid">
-      <div class="dl-item">
-        <div>
-          <div class="label">macOS (Apple Silicon)</div>
-          <div class="sublabel">arm64</div>
-        </div>
-        <a href="https://github.com/scopophobic/ZeroTest/releases/download/v0.1.1/zerotest-darwin-arm64">⬇</a>
-      </div>
-      <div class="dl-item">
-        <div>
-          <div class="label">macOS (Intel)</div>
-          <div class="sublabel">amd64</div>
-        </div>
-        <a href="https://github.com/scopophobic/ZeroTest/releases/download/v0.1.1/zerotest-darwin-amd64">⬇</a>
-      </div>
-      <div class="dl-item">
-        <div>
-          <div class="label">Linux</div>
-          <div class="sublabel">amd64</div>
-        </div>
-        <a href="https://github.com/scopophobic/ZeroTest/releases/download/v0.1.1/zerotest-linux-amd64">⬇</a>
-      </div>
-      <div class="dl-item">
-        <div>
-          <div class="label">Windows</div>
-          <div class="sublabel">amd64</div>
-        </div>
-        <a href="https://github.com/scopophobic/ZeroTest/releases/download/v0.1.1/zerotest-windows-amd64.exe">⬇</a>
-      </div>
-    </div>
+    <h2 class="section-title">/ install</h2>
+
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px;">No notarization, no fees — grab the binary straight from the terminal.</p>
+
     <div class="install-line">go install github.com/scopophobic/ZeroTest@latest</div>
+
+    <p style="font-size:13px;color:var(--muted);margin:24px 0 12px;">Or download with curl:</p>
+
+    <pre><span class="comment"># macOS / Linux</span>
+curl -sL https://github.com/scopophobic/ZeroTest/releases/latest/download/zerotest-$(uname -s | tr '[:upper:]' '[:lower:]')-$(uname -m | sed 's/x86_64/amd64/; s/aarch64/arm64/') -o /usr/local/bin/zerotest && chmod +x /usr/local/bin/zerotest
+
+<span class="comment"># Windows (PowerShell)</span>
+curl -sL https://github.com/scopophobic/ZeroTest/releases/latest/download/zerotest-windows-amd64.exe -o zerotest.exe</pre>
+
+    <details style="margin-top:20px;font-size:13px;color:var(--muted);">
+      <summary style="cursor:pointer;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;font-size:11px;color:var(--fg);">Direct download links</summary>
+      <div class="dl-grid" style="margin-top:12px;">
+        <div class="dl-item">
+          <div>
+            <div class="label">macOS (Apple Silicon)</div>
+            <div class="sublabel">arm64</div>
+          </div>
+          <a href="https://github.com/scopophobic/ZeroTest/releases/download/v0.1.1/zerotest-darwin-arm64">⬇</a>
+        </div>
+        <div class="dl-item">
+          <div>
+            <div class="label">macOS (Intel)</div>
+            <div class="sublabel">amd64</div>
+          </div>
+          <a href="https://github.com/scopophobic/ZeroTest/releases/download/v0.1.1/zerotest-darwin-amd64">⬇</a>
+        </div>
+        <div class="dl-item">
+          <div>
+            <div class="label">Linux</div>
+            <div class="sublabel">amd64</div>
+          </div>
+          <a href="https://github.com/scopophobic/ZeroTest/releases/download/v0.1.1/zerotest-linux-amd64">⬇</a>
+        </div>
+        <div class="dl-item">
+          <div>
+            <div class="label">Windows</div>
+            <div class="sublabel">amd64</div>
+          </div>
+          <a href="https://github.com/scopophobic/ZeroTest/releases/download/v0.1.1/zerotest-windows-amd64.exe">⬇</a>
+        </div>
+      </div>
+    </details>
   </section>
 
   <section class="section container" id="use">
